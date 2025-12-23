@@ -1,12 +1,14 @@
 <script>
     import FolderBrowser from '$lib/components/FolderBrowser.svelte';
+    import Icon from '$lib/components/Icon.svelte';
+    import Logo from '$lib/components/Logo.svelte';
     import { onMount } from 'svelte';
 
     let authenticated = false;
     let selectedFolderIds = [];
     let includeSubfolders = true;
-    let includeFiles = true; // Nueva opción
-    let exportFormat = 'csv'; // Nueva opción: csv, json, txt
+    let includeFiles = true;
+    let exportFormat = 'csv';
     let exporting = false;
     let exportResult = null;
     let isLoading = true;
@@ -45,7 +47,6 @@
 
             const data = await response.json();
 
-            // Filtrar según la opción seleccionada
             let filteredItems = data.items;
             if (!includeFiles) {
                 filteredItems = data.items.filter(item => item.type === 'Carpeta');
@@ -56,7 +57,6 @@
                 total: data.count
             };
 
-            // Descargar según formato
             switch(exportFormat) {
                 case 'csv':
                     downloadCSV(filteredItems);
@@ -132,7 +132,7 @@
             '═══════════════════════════════════════════════════════════',
             '',
             ...items.map(item => [
-                `📍 ${item.name}`,
+                `• ${item.name}`,
                 `   Ruta: ${item.path}`,
                 `   Tipo: ${item.type}`,
                 `   Link: ${item.link}`,
@@ -202,33 +202,34 @@
         </div>
     {:else if !authenticated}
         <div class="auth-container">
-            <div class="logo">
-                <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" stroke="#1a1a1a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
+            <div class="logo-wrapper">
+                <Logo size="lg" />
             </div>
 
-            <h1>Drive Links Extractor</h1>
             <p class="subtitle">Extrae y organiza los enlaces de tus carpetas de Google Drive</p>
 
             <button class="btn-primary" on:click={login}>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
+                <Icon name="drive" size={20} />
                 Conectar con Google Drive
             </button>
 
             <div class="features">
                 <div class="feature">
-                    <span class="feature-icon">🔍</span>
+                    <div class="feature-icon">
+                        <Icon name="search" size={24} />
+                    </div>
                     <span>Navega por tus carpetas</span>
                 </div>
                 <div class="feature">
-                    <span class="feature-icon">✓</span>
+                    <div class="feature-icon">
+                        <Icon name="checkCircle" size={24} />
+                    </div>
                     <span>Selecciona las que necesites</span>
                 </div>
                 <div class="feature">
-                    <span class="feature-icon">📥</span>
+                    <div class="feature-icon">
+                        <Icon name="download" size={24} />
+                    </div>
                     <span>Exporta en múltiples formatos</span>
                 </div>
             </div>
@@ -236,10 +237,13 @@
     {:else}
         <header>
             <div class="header-content">
-                <h1>Drive Links Extractor</h1>
+                <Logo size="md" />
                 <div class="header-stats">
                     {#if selectedFolderIds.length > 0}
-                        <span class="stat-badge">{selectedFolderIds.length} seleccionada{selectedFolderIds.length !== 1 ? 's' : ''}</span>
+                        <span class="stat-badge">
+                            <Icon name="checkCircle" size={16} />
+                            {selectedFolderIds.length} seleccionada{selectedFolderIds.length !== 1 ? 's' : ''}
+                        </span>
                     {/if}
                 </div>
             </div>
@@ -258,7 +262,7 @@
                         <label class="toggle-option">
                             <input type="checkbox" bind:checked={includeSubfolders} />
                             <span class="toggle-label">
-                                <span class="toggle-icon">🔄</span>
+                                <Icon name="refresh" size={20} />
                                 Incluir subcarpetas
                             </span>
                         </label>
@@ -266,19 +270,22 @@
                         <label class="toggle-option">
                             <input type="checkbox" bind:checked={includeFiles} />
                             <span class="toggle-label">
-                                <span class="toggle-icon">📄</span>
+                                <Icon name="file" size={20} />
                                 Incluir archivos
                             </span>
                         </label>
                     </div>
 
                     <div class="format-selector">
-                        <label class="format-label">Formato de exportación</label>
+                        <label class="format-label">
+                            <Icon name="sliders" size={18} />
+                            Formato de exportación
+                        </label>
                         <div class="format-options">
                             <label class="format-option">
                                 <input type="radio" bind:group={exportFormat} value="csv" />
                                 <span class="format-card">
-                                    <span class="format-icon">📊</span>
+                                    <Icon name="database" size={24} />
                                     <span class="format-info">
                                         <strong>CSV</strong>
                                         <small>Excel compatible</small>
@@ -289,7 +296,7 @@
                             <label class="format-option">
                                 <input type="radio" bind:group={exportFormat} value="json" />
                                 <span class="format-card">
-                                    <span class="format-icon">{'{ }'}</span>
+                                    <Icon name="code" size={24} />
                                     <span class="format-info">
                                         <strong>JSON</strong>
                                         <small>Desarrollo</small>
@@ -300,7 +307,7 @@
                             <label class="format-option">
                                 <input type="radio" bind:group={exportFormat} value="txt" />
                                 <span class="format-card">
-                                    <span class="format-icon">📝</span>
+                                    <Icon name="fileText" size={24} />
                                     <span class="format-info">
                                         <strong>TXT</strong>
                                         <small>Lectura fácil</small>
@@ -311,7 +318,7 @@
                             <label class="format-option">
                                 <input type="radio" bind:group={exportFormat} value="md" />
                                 <span class="format-card">
-                                    <span class="format-icon">📄</span>
+                                    <Icon name="fileText" size={24} />
                                     <span class="format-info">
                                         <strong>Markdown</strong>
                                         <small>Documentación</small>
@@ -331,19 +338,14 @@
                         <span class="btn-spinner"></span>
                         Exportando...
                     {:else}
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
+                        <Icon name="download" size={20} />
                         Exportar Links
                     {/if}
                 </button>
 
                 {#if exportResult}
                     <div class="result-card">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" stroke="#1a1a1a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M22 4L12 14.01l-3-3" stroke="#1a1a1a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
+                        <Icon name="checkCircle" size={24} color="var(--success)" />
                         <div>
                             <strong>{exportResult.count} elementos exportados</strong>
                             <p>
@@ -365,9 +367,9 @@
     :global(body) {
         margin: 0;
         padding: 0;
-        background: #f5f2f2;
-        color: #1a1a1a;
-        font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif;
+        background: var(--bg-body, #FAFAFA);
+        color: var(--neutral-900, #171717);
+        font-family: var(--font-body, -apple-system, BlinkMacSystemFont, 'Geist', 'Segoe UI', sans-serif);
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
     }
@@ -391,8 +393,8 @@
     .spinner {
         width: 48px;
         height: 48px;
-        border: 3px solid rgba(26, 26, 26, 0.1);
-        border-top-color: #1a1a1a;
+        border: 3px solid var(--neutral-200, #E5E5E5);
+        border-top-color: var(--primary, #0066FF);
         border-radius: 50%;
         animation: spin 0.8s linear infinite;
     }
@@ -414,7 +416,7 @@
         min-height: 100vh;
     }
 
-    .logo {
+    .logo-wrapper {
         margin-bottom: 2rem;
         animation: float 3s ease-in-out infinite;
     }
@@ -424,26 +426,12 @@
         50% { transform: translateY(-10px); }
     }
 
-    h1 {
-        font-size: 2.5rem;
-        font-weight: 700;
-        margin: 0 0 0.5rem 0;
-        letter-spacing: -0.02em;
-        color: #1a1a1a;
-        font-family: 'Axiforma', -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif;
-    }
-
-    header h1 {
-        font-size: 1.5rem;
-        margin: 0;
-        font-family: 'Axiforma', -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif;
-    }
-
     .subtitle {
         font-size: 1.125rem;
-        color: #666;
+        color: var(--neutral-600, #525252);
         margin: 0 0 3rem 0;
         line-height: 1.6;
+        font-weight: 400;
     }
 
     .btn-primary {
@@ -451,21 +439,22 @@
         align-items: center;
         gap: 0.75rem;
         padding: 1rem 2rem;
-        background: #1a1a1a;
-        color: #f5f2f2;
+        background: var(--primary, #0066FF);
+        color: white;
         border: none;
-        border-radius: 12px;
+        border-radius: var(--radius-lg, 12px);
         font-size: 1rem;
         font-weight: 600;
         cursor: pointer;
-        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-        box-shadow: 0 4px 12px rgba(26, 26, 26, 0.15);
+        transition: all var(--transition-fast, 150ms);
+        box-shadow: var(--shadow-lg);
+        font-family: var(--font-body);
     }
 
     .btn-primary:hover {
         transform: translateY(-2px);
-        box-shadow: 0 8px 20px rgba(26, 26, 26, 0.2);
-        background: #2a2a2a;
+        box-shadow: var(--shadow-xl);
+        background: var(--primary-dark, #0052CC);
     }
 
     .btn-primary:active {
@@ -484,25 +473,32 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 0.5rem;
-        color: #666;
+        gap: 0.75rem;
+        color: var(--neutral-600, #525252);
         font-size: 0.9rem;
     }
 
     .feature-icon {
-        font-size: 1.5rem;
+        width: 56px;
+        height: 56px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--primary-light, #E6F0FF);
+        border-radius: var(--radius-xl, 16px);
+        color: var(--primary, #0066FF);
     }
 
     /* Header */
     header {
-        background: white;
-        border-bottom: 1px solid rgba(26, 26, 26, 0.08);
+        background: var(--bg-surface, white);
+        border-bottom: 1px solid var(--border-color);
         padding: 1.5rem 2rem;
         position: sticky;
         top: 0;
-        z-index: 10;
+        z-index: var(--z-sticky, 20);
         backdrop-filter: blur(10px);
-        background: rgba(255, 255, 255, 0.9);
+        background: rgba(255, 255, 255, 0.95);
     }
 
     .header-content {
@@ -513,21 +509,19 @@
         align-items: center;
     }
 
-    header h1 {
-        font-size: 1.5rem;
-        margin: 0;
-    }
-
     .header-stats {
         display: flex;
         gap: 1rem;
     }
 
     .stat-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
         padding: 0.5rem 1rem;
-        background: #1a1a1a;
-        color: #f5f2f2;
-        border-radius: 20px;
+        background: var(--primary, #0066FF);
+        color: white;
+        border-radius: var(--radius-full, 9999px);
         font-size: 0.875rem;
         font-weight: 600;
     }
@@ -544,11 +538,11 @@
     }
 
     .browser-section {
-        background: white;
-        border-radius: 16px;
+        background: var(--bg-surface, white);
+        border-radius: var(--radius-xl, 16px);
         padding: 2rem;
-        box-shadow: 0 2px 8px rgba(26, 26, 26, 0.04);
-        border: 1px solid rgba(26, 26, 26, 0.06);
+        box-shadow: var(--shadow-sm);
+        border: 1px solid var(--border-color);
     }
 
     .actions-section {
@@ -558,11 +552,11 @@
     }
 
     .options-card {
-        background: white;
-        border-radius: 16px;
+        background: var(--bg-surface, white);
+        border-radius: var(--radius-xl, 16px);
         padding: 2rem;
-        box-shadow: 0 2px 8px rgba(26, 26, 26, 0.04);
-        border: 1px solid rgba(26, 26, 26, 0.06);
+        box-shadow: var(--shadow-sm);
+        border: 1px solid var(--border-color);
         display: flex;
         flex-direction: column;
         gap: 1.5rem;
@@ -572,7 +566,8 @@
         margin: 0;
         font-size: 1.125rem;
         font-weight: 600;
-        color: #1a1a1a;
+        color: var(--neutral-900, #171717);
+        font-family: var(--font-body);
     }
 
     .options-grid {
@@ -588,19 +583,19 @@
         cursor: pointer;
         user-select: none;
         padding: 0.75rem;
-        border-radius: 8px;
-        transition: background 0.2s;
+        border-radius: var(--radius-md, 8px);
+        transition: background var(--transition-fast);
     }
 
     .toggle-option:hover {
-        background: #fafafa;
+        background: var(--neutral-50, #FAFAFA);
     }
 
     .toggle-option input[type="checkbox"] {
         width: 20px;
         height: 20px;
         cursor: pointer;
-        accent-color: #1a1a1a;
+        accent-color: var(--primary, #0066FF);
     }
 
     .toggle-label {
@@ -611,10 +606,6 @@
         font-weight: 500;
     }
 
-    .toggle-icon {
-        font-size: 1.25rem;
-    }
-
     /* Format Selector */
     .format-selector {
         display: flex;
@@ -623,9 +614,12 @@
     }
 
     .format-label {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
         font-size: 0.95rem;
         font-weight: 600;
-        color: #1a1a1a;
+        color: var(--neutral-900, #171717);
     }
 
     .format-options {
@@ -648,25 +642,21 @@
         align-items: center;
         gap: 0.5rem;
         padding: 1rem;
-        border: 2px solid rgba(26, 26, 26, 0.1);
-        border-radius: 12px;
-        transition: all 0.2s;
-        background: #fafafa;
+        border: 2px solid var(--border-color);
+        border-radius: var(--radius-lg, 12px);
+        transition: all var(--transition-fast);
+        background: var(--neutral-50, #FAFAFA);
     }
 
     .format-option:hover .format-card {
-        border-color: rgba(26, 26, 26, 0.3);
-        background: white;
+        border-color: var(--primary-light, #E6F0FF);
+        background: var(--bg-surface, white);
     }
 
     .format-option input:checked ~ .format-card {
-        border-color: #1a1a1a;
-        background: white;
-        box-shadow: 0 2px 8px rgba(26, 26, 26, 0.08);
-    }
-
-    .format-icon {
-        font-size: 1.5rem;
+        border-color: var(--primary, #0066FF);
+        background: var(--primary-light, #E6F0FF);
+        box-shadow: var(--shadow-md);
     }
 
     .format-info {
@@ -679,12 +669,12 @@
 
     .format-info strong {
         font-size: 0.9rem;
-        color: #1a1a1a;
+        color: var(--neutral-900, #171717);
     }
 
     .format-info small {
         font-size: 0.75rem;
-        color: #666;
+        color: var(--neutral-600, #525252);
     }
 
     .btn-export {
@@ -694,21 +684,22 @@
         gap: 0.75rem;
         width: 100%;
         padding: 1.25rem 2rem;
-        background: #1a1a1a;
-        color: #f5f2f2;
+        background: var(--primary, #0066FF);
+        color: white;
         border: none;
-        border-radius: 12px;
+        border-radius: var(--radius-lg, 12px);
         font-size: 1rem;
         font-weight: 600;
         cursor: pointer;
-        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-        box-shadow: 0 4px 12px rgba(26, 26, 26, 0.15);
+        transition: all var(--transition-fast);
+        box-shadow: var(--shadow-lg);
+        font-family: var(--font-body);
     }
 
     .btn-export:hover:not(:disabled) {
         transform: translateY(-2px);
-        box-shadow: 0 8px 20px rgba(26, 26, 26, 0.2);
-        background: #2a2a2a;
+        box-shadow: var(--shadow-xl);
+        background: var(--primary-dark, #0052CC);
     }
 
     .btn-export:active:not(:disabled) {
@@ -724,33 +715,33 @@
     .btn-spinner {
         width: 16px;
         height: 16px;
-        border: 2px solid rgba(245, 242, 242, 0.3);
-        border-top-color: #f5f2f2;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-top-color: white;
         border-radius: 50%;
         animation: spin 0.6s linear infinite;
     }
 
     .result-card {
-        background: white;
-        border: 1px solid rgba(26, 26, 26, 0.08);
-        border-radius: 12px;
+        background: var(--bg-surface, white);
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-lg, 12px);
         padding: 1.5rem;
         display: flex;
         gap: 1rem;
         align-items: flex-start;
         animation: slideIn 0.3s ease-out;
-        box-shadow: 0 2px 8px rgba(26, 26, 26, 0.04);
+        box-shadow: var(--shadow-sm);
     }
 
     .result-card strong {
         display: block;
         margin-bottom: 0.25rem;
-        color: #1a1a1a;
+        color: var(--neutral-900, #171717);
     }
 
     .result-card p {
         margin: 0;
-        color: #666;
+        color: var(--neutral-600, #525252);
         font-size: 0.9rem;
     }
 
@@ -767,10 +758,6 @@
 
     /* Responsive */
     @media (max-width: 768px) {
-        h1 {
-            font-size: 2rem;
-        }
-
         .main-content {
             padding: 1rem;
         }
