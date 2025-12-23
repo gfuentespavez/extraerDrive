@@ -182,7 +182,10 @@
     }
 
     function downloadFile(content, mimeType, extension) {
-        const blob = new Blob([content], { type: `${mimeType};charset=utf-8;` });
+        // Agregar BOM (Byte Order Mark) para UTF-8
+        // Esto asegura que los caracteres especiales (ñ, á, é, etc.) se lean correctamente
+        const BOM = '\uFEFF';
+        const blob = new Blob([BOM + content], { type: `${mimeType};charset=utf-8;` });
         const link = document.createElement('a');
         link.href = URL.createObjectURL(blob);
         link.download = `drive_links_${Date.now()}.${extension}`;

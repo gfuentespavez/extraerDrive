@@ -19,6 +19,13 @@ export async function POST({ request, cookies }) {
             allItems = allItems.concat(items);
         }
 
+        // Ordenar por fecha de creación (ascendente: más antiguo primero)
+        allItems.sort((a, b) => {
+            const dateA = new Date(a.created);
+            const dateB = new Date(b.created);
+            return dateA - dateB; // Ascendente: 2023 -> 2024 -> 2025
+        });
+
         return json({ items: allItems, count: allItems.length });
     } catch (error) {
         console.error('Error exporting:', error);
