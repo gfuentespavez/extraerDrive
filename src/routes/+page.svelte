@@ -201,36 +201,97 @@
             <p>Cargando...</p>
         </div>
     {:else if !authenticated}
-        <div class="auth-container">
-            <div class="logo-wrapper">
-                <Logo size="lg" />
-            </div>
-
-            <p class="subtitle">Extrae y organiza los enlaces de tus carpetas de Google Drive</p>
-
-            <button class="btn-primary" on:click={login}>
-                <Icon name="drive" size={20} />
-                Conectar con Google Drive
-            </button>
-
-            <div class="features">
-                <div class="feature">
-                    <div class="feature-icon">
-                        <Icon name="search" size={24} />
+        <div class="hero-container">
+            <div class="hero-grid">
+                <!-- Columna Izquierda: Logo y Descripción -->
+                <div class="hero-left">
+                    <div class="logo-section">
+                        <Logo size="lg" />
                     </div>
-                    <span>Navega por tus carpetas</span>
+
+                    <h1 class="hero-title">
+                        Extrae enlaces de <span class="highlight">Google Drive</span> en segundos
+                    </h1>
+
+                    <p class="hero-description">
+                        Navega, selecciona y exporta los enlaces de tus carpetas de Google Drive
+                        en múltiples formatos. Simple, rápido y eficiente.
+                    </p>
+
+                    <div class="hero-stats">
+                        <div class="stat">
+                            <span class="stat-number">100%</span>
+                            <span class="stat-label">Gratis</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-number">4</span>
+                            <span class="stat-label">Formatos</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-number">∞</span>
+                            <span class="stat-label">Carpetas</span>
+                        </div>
+                    </div>
                 </div>
-                <div class="feature">
-                    <div class="feature-icon">
-                        <Icon name="checkCircle" size={24} />
+
+                <!-- Columna Derecha: CTA y Features -->
+                <div class="hero-right">
+                    <div class="cta-card">
+                        <h3 class="cta-title">Comienza ahora</h3>
+                        <p class="cta-description">
+                            Conecta tu cuenta de Google Drive para empezar
+                        </p>
+
+                        <button class="btn-primary" on:click={login}>
+                            <Icon name="drive" size={24} />
+                            <span>Conectar Google Drive</span>
+                            <Icon name="chevronRight" size={20} />
+                        </button>
+
+                        <div class="trust-badge">
+                            <Icon name="checkCircle" size={16} color="var(--success)" />
+                            <span>Conexión segura y privada</span>
+                        </div>
                     </div>
-                    <span>Selecciona las que necesites</span>
-                </div>
-                <div class="feature">
-                    <div class="feature-icon">
-                        <Icon name="download" size={24} />
+
+                    <div class="features-card">
+                        <h4 class="features-title">¿Cómo funciona?</h4>
+
+                        <div class="feature-list">
+                            <div class="feature-item">
+                                <div class="feature-number">1</div>
+                                <div class="feature-content">
+                                    <Icon name="search" size={24} color="var(--primary)" />
+                                    <div>
+                                        <strong>Navega</strong>
+                                        <p>Explora tus carpetas de Drive de forma intuitiva</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="feature-item">
+                                <div class="feature-number">2</div>
+                                <div class="feature-content">
+                                    <Icon name="checkCircle" size={24} color="var(--primary)" />
+                                    <div>
+                                        <strong>Selecciona</strong>
+                                        <p>Marca las carpetas que necesitas exportar</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="feature-item">
+                                <div class="feature-number">3</div>
+                                <div class="feature-content">
+                                    <Icon name="download" size={24} color="var(--primary)" />
+                                    <div>
+                                        <strong>Exporta</strong>
+                                        <p>Descarga en CSV, JSON, TXT o Markdown</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <span>Exporta en múltiples formatos</span>
                 </div>
             </div>
         </div>
@@ -403,57 +464,158 @@
         to { transform: rotate(360deg); }
     }
 
-    /* Auth Container */
-    .auth-container {
-        max-width: 480px;
-        margin: 0 auto;
-        padding: 4rem 2rem;
-        text-align: center;
+    /* Hero Section */
+    .hero-container {
+        min-height: 100vh;
         display: flex;
-        flex-direction: column;
         align-items: center;
         justify-content: center;
-        min-height: 100vh;
+        padding: 2rem;
+        background: linear-gradient(135deg, #FAFAFA 0%, #F0F4FF 100%);
+        position: relative;
+        overflow: hidden;
     }
 
-    .logo-wrapper {
-        margin-bottom: 2rem;
-        animation: float 3s ease-in-out infinite;
+    .hero-container::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -20%;
+        width: 800px;
+        height: 800px;
+        background: radial-gradient(circle, rgba(0, 102, 255, 0.08) 0%, transparent 70%);
+        border-radius: 50%;
+        pointer-events: none;
     }
 
-    @keyframes float {
-        0%, 100% { transform: translateY(0px); }
-        50% { transform: translateY(-10px); }
+    .hero-grid {
+        max-width: 1200px;
+        width: 100%;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 4rem;
+        align-items: center;
+        position: relative;
+        z-index: 1;
     }
 
-    .subtitle {
-        font-size: 1.125rem;
-        color: var(--neutral-600, #525252);
-        margin: 0 0 3rem 0;
+    /* Hero Left */
+    .hero-left {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+    }
+
+    .logo-section {
+        animation: fadeInUp 0.6s ease-out;
+    }
+
+    .hero-title {
+        font-family: var(--font-display, 'Georgia', serif);
+        font-size: 3.5rem;
+        font-weight: 600;
+        line-height: 1.1;
+        margin: 0;
+        color: var(--neutral-900, #171717);
+        letter-spacing: -0.02em;
+        animation: fadeInUp 0.6s ease-out 0.1s backwards;
+    }
+
+    .highlight {
+        color: var(--primary, #0066FF);
+        position: relative;
+    }
+
+    .hero-description {
+        font-size: 1.25rem;
         line-height: 1.6;
-        font-weight: 400;
+        color: var(--neutral-600, #525252);
+        margin: 0;
+        max-width: 540px;
+        animation: fadeInUp 0.6s ease-out 0.2s backwards;
+    }
+
+    .hero-stats {
+        display: flex;
+        gap: 3rem;
+        animation: fadeInUp 0.6s ease-out 0.3s backwards;
+    }
+
+    .stat {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+
+    .stat-number {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--primary, #0066FF);
+        font-family: var(--font-display);
+        line-height: 1;
+    }
+
+    .stat-label {
+        font-size: 0.875rem;
+        color: var(--neutral-600, #525252);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        font-weight: 600;
+    }
+
+    /* Hero Right */
+    .hero-right {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+        animation: fadeInUp 0.6s ease-out 0.4s backwards;
+    }
+
+    .cta-card {
+        background: white;
+        border-radius: var(--radius-xl, 16px);
+        padding: 2.5rem;
+        box-shadow: var(--shadow-xl);
+        border: 1px solid var(--border-color);
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    .cta-title {
+        margin: 0;
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: var(--neutral-900, #171717);
+    }
+
+    .cta-description {
+        margin: 0;
+        color: var(--neutral-600, #525252);
+        line-height: 1.5;
     }
 
     .btn-primary {
-        display: inline-flex;
+        display: flex;
         align-items: center;
+        justify-content: center;
         gap: 0.75rem;
-        padding: 1rem 2rem;
+        padding: 1.25rem 2rem;
         background: var(--primary, #0066FF);
         color: white;
         border: none;
         border-radius: var(--radius-lg, 12px);
-        font-size: 1rem;
+        font-size: 1.125rem;
         font-weight: 600;
         cursor: pointer;
         transition: all var(--transition-fast, 150ms);
-        box-shadow: var(--shadow-lg);
+        box-shadow: 0 4px 12px rgba(0, 102, 255, 0.3);
         font-family: var(--font-body);
     }
 
     .btn-primary:hover {
         transform: translateY(-2px);
-        box-shadow: var(--shadow-xl);
+        box-shadow: 0 8px 20px rgba(0, 102, 255, 0.4);
         background: var(--primary-dark, #0052CC);
     }
 
@@ -461,32 +623,94 @@
         transform: translateY(0);
     }
 
-    .features {
+    .trust-badge {
         display: flex;
-        gap: 2rem;
-        margin-top: 4rem;
-        flex-wrap: wrap;
+        align-items: center;
         justify-content: center;
+        gap: 0.5rem;
+        padding-top: 1rem;
+        border-top: 1px solid var(--border-color);
+        font-size: 0.875rem;
+        color: var(--neutral-600, #525252);
     }
 
-    .feature {
+    .features-card {
+        background: white;
+        border-radius: var(--radius-xl, 16px);
+        padding: 2rem;
+        box-shadow: var(--shadow-md);
+        border: 1px solid var(--border-color);
+    }
+
+    .features-title {
+        margin: 0 0 1.5rem 0;
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--neutral-900, #171717);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .feature-list {
         display: flex;
         flex-direction: column;
-        align-items: center;
-        gap: 0.75rem;
-        color: var(--neutral-600, #525252);
-        font-size: 0.9rem;
+        gap: 1.5rem;
     }
 
-    .feature-icon {
-        width: 56px;
-        height: 56px;
+    .feature-item {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 1rem;
+        align-items: start;
+    }
+
+    .feature-number {
+        width: 32px;
+        height: 32px;
         display: flex;
         align-items: center;
         justify-content: center;
         background: var(--primary-light, #E6F0FF);
-        border-radius: var(--radius-xl, 16px);
         color: var(--primary, #0066FF);
+        border-radius: 50%;
+        font-weight: 700;
+        font-size: 0.875rem;
+        flex-shrink: 0;
+    }
+
+    .feature-content {
+        display: flex;
+        gap: 1rem;
+        align-items: start;
+    }
+
+    .feature-content > div {
+        flex: 1;
+    }
+
+    .feature-content strong {
+        display: block;
+        color: var(--neutral-900, #171717);
+        font-weight: 600;
+        margin-bottom: 0.25rem;
+    }
+
+    .feature-content p {
+        margin: 0;
+        color: var(--neutral-600, #525252);
+        font-size: 0.9rem;
+        line-height: 1.5;
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
     }
 
     /* Header */
@@ -757,7 +981,49 @@
     }
 
     /* Responsive */
+    @media (max-width: 1024px) {
+        .hero-grid {
+            grid-template-columns: 1fr;
+            gap: 3rem;
+        }
+
+        .hero-title {
+            font-size: 2.5rem;
+        }
+
+        .hero-left {
+            text-align: center;
+            align-items: center;
+        }
+
+        .hero-description {
+            max-width: 100%;
+        }
+    }
+
     @media (max-width: 768px) {
+        .hero-container {
+            padding: 2rem 1rem;
+        }
+
+        .hero-title {
+            font-size: 2rem;
+        }
+
+        .hero-description {
+            font-size: 1.125rem;
+        }
+
+        .hero-stats {
+            justify-content: center;
+            gap: 2rem;
+        }
+
+        .cta-card,
+        .features-card {
+            padding: 1.5rem;
+        }
+
         .main-content {
             padding: 1rem;
         }
@@ -765,14 +1031,6 @@
         .browser-section,
         .options-card {
             padding: 1rem;
-        }
-
-        .features {
-            gap: 1rem;
-        }
-
-        .feature {
-            font-size: 0.8rem;
         }
 
         .format-options {
